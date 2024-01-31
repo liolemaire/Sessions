@@ -10,10 +10,21 @@ authenticated via an API key, can only "read" records.
 const schema = a.schema({
   KitItem: a
     .model({
-      content: a.string(),
+      title: a.string().required(),
+      sessions: a.hasMany("Session"),
+      owner: a.string().authorization([a.allow.owner().to(["read", "delete"])]),
     })
-    .authorization([a.allow.owner(), a.allow.public().to(['read'])]),
+    .authorization([a.allow.public().to(["read"]), a.allow.owner()]),
+  Session: a
+    .model({
+      content: a.string().required(),
+      kititems: a.hasMany("KitItem"),
+      owner: a.string().authorization([a.allow.owner().to(["read", "delete"])]),
+    })
+    .authorization([a.allow.public().to(["read"]), a.allow.owner()]),
 });
+
+
 
 export type Schema = ClientSchema<typeof schema>;
 
