@@ -11,6 +11,7 @@ const schema = a.schema({
   KitItem: a
     .model({
       title: a.string().required(),
+      // sessions: a.manyToMany("Session", { relationName: 'SessionKitItems'}),
       sessions: a.hasMany("Session"),
       owner: a.string().authorization([a.allow.owner().to(["read", "delete"])]),
     })
@@ -18,7 +19,8 @@ const schema = a.schema({
   Session: a
     .model({
       content: a.string().required(),
-      kititems: a.hasMany("KitItem"),
+      kititems : a.belongsTo("KitItem"),
+      // kititems: a.manyToMany("KitItem", { relationName: 'SessionKitItems'}),
       owner: a.string().authorization([a.allow.owner().to(["read", "delete"])]),
     })
     .authorization([a.allow.public().to(["read"]), a.allow.owner()]),

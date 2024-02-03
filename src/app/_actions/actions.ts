@@ -5,30 +5,32 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { Schema } from "../../../amplify/data/resource";
 
-// export async function deleteComment(formData: FormData) {
-//   const id = formData.get("id")?.toString();
-//   if (!id) return;
-//   const { data: deletedComment } =
-//     await cookieBasedClient.models.Comment.delete({
-//       id,
-//     });
-//   console.log("deleted", deletedComment);
-// }
+export async function deleteSession(formData: FormData) {
+  const id = formData.get("id")?.toString();
+  if (!id) return;
+  const { data: deletedSession } =
+    await cookieBasedClient.models.Session.delete({
+      id,
+    });
+  console.log("deleted", deletedSession);
+}
 
-// export async function addComment(
-//   content: string,
-//   kititem: Schema["KitItem"],
-//   paramsId: string
-// ) {
-//   if (content.trim().length === 0) return;
-//   const { data: comment } = await cookieBasedClient.models.Comment.create({
-//     kititem,
-//     content,
-//   });
+export async function addSession(
+  content: string,
+  kititems : Schema["KitItem"],
+  paramsId: string
+) {
+  if (content.trim().length === 0) return;
+  console.log(kititems);
+  const { data: session } = await cookieBasedClient.models.Session.create(    
+  {
+    kititems,
+    content
+  });
 
-//   console.log("got comment", comment);
-//   revalidatePath(`/kititem/${paramsId}`);
-// }
+  console.log("got session", session);
+  revalidatePath(`/kititem/${paramsId}`);
+}
 
 export async function onDeleteKitItem(id: string) {
   const { data, errors } = await cookieBasedClient.models.KitItem.delete({

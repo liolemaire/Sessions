@@ -1,7 +1,7 @@
 import { cookieBasedClient, isAuthenticated } from "@/utils/amplify-utils";
 import { revalidatePath } from "next/cache";
-// import { addComment, deleteComment } from "@/app/_actions/actions";
-// import AddComment from "@/components/AddComment";
+import { addSession, deleteSession } from "@/app/_actions/actions";
+import AddSession from "@/components/AddSession";
 import React from "react";
 import { Schema } from "../../../../amplify/data/resource";
 
@@ -18,14 +18,14 @@ const KitItems = async ({ params }: { params: { id: string } }) => {
       selectionSet: ["id", "title"],
     }
   );
-  // const { data: allComments } = await cookieBasedClient.models.Comment.list({
-  //   authMode: "apiKey",
-  //   selectionSet: ["content", "kititem.id", "id"],
-  // });
+  const { data: allSessions } = await cookieBasedClient.models.Session.list({
+    authMode: "apiKey",
+    selectionSet: ["content", "kititems.id", "id"],
+  });
 
-  // const comments = allComments.filter(
-  //   (comment) => comment.kititem.id === params.id
-  // );
+  const sessions = allSessions.filter(
+    (session) => session.kititems.id === params.id
+  );
 
   return (
     <div className="flex flex-col items-center p-4 gap-4">
@@ -34,27 +34,27 @@ const KitItems = async ({ params }: { params: { id: string } }) => {
         <h2>Title: {kititem.title}</h2>
       </div>
 
-      {/* {isSignedIn ? (
-        <AddComment
-          addComment={addComment}
+      {isSignedIn ? (
+        <AddSession
+          addSession={addSession}
           paramsId={params.id}
           kititem={kititem as Schema["KitItem"]}
         />
       ) : null}
 
-      <h1 className="text-xl font-bold">Comments:</h1>
-      {comments.map((comment, idx) => (
+      <h1 className="text-xl font-bold">Sessions:</h1>
+      {sessions.map((session, idx) => (
         <div key={idx}>
           <div className="w-96 p-2 rounded border bg-yellow-100 flex justify-between">
-            <div>{comment.content}</div>
+            <div>{session.content}</div>
             <form
               action={async (formData) => {
                 "use server";
-                await deleteComment(formData);
+                await deleteSession(formData);
                 revalidatePath(`/kititems/${params.id}`);
               }}
             >
-              <input type="hidden" name="id" id="id" value={comment.id} />
+              <input type="hidden" name="id" id="id" value={session.id} />
               {isSignedIn ? (
                 <button type="submit" className="text-red-950">
                   X
@@ -63,7 +63,7 @@ const KitItems = async ({ params }: { params: { id: string } }) => {
             </form>
           </div>
         </div>
-      ))} */}
+      ))}
     </div>
   );
 };
