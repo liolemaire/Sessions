@@ -18,15 +18,28 @@ const KitItems = async ({ params }: { params: { id: string } }) => {
       selectionSet: ["id", "title"],
     }
   );
-  const { data: allSessions } = await cookieBasedClient.models.Session.list({
-    authMode: "apiKey",
-    selectionSet: ["content", "kititems.id", "id"],
-  });
 
-  const sessions = allSessions.filter(
-    (session) => session.kititems.id === params.id
+  const { data: sessionkititems } = await cookieBasedClient.models.SessionKitItems.list(
+    {
+      filter:{
+        kitItemId : {
+          eq : params.id
+        }
+      }
+    }
   );
 
+  // Extract session IDs from SessionKitItems
+  const sessionIds = sessionkititems.map((item) => item.sessionId);
+  console.log("sessionids",sessionIds);
+
+  //Fetch Sessions by IDs
+  const { data: allSessions } = await cookieBasedClient.models.Session.list();
+
+  const sessions = allSessions.filter(
+    (session) => sessionIds.includes(session.id)
+  );
+  
   return (
     <div className="flex flex-col items-center p-4 gap-4">
       <h1 className="text-2xl font-bold">KitItem Information:</h1>

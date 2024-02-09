@@ -17,18 +17,23 @@ export async function deleteSession(formData: FormData) {
 
 export async function addSession(
   content: string,
-  kititems : Schema["KitItem"],
+  kititem : Schema["KitItem"],
   paramsId: string
 ) {
   if (content.trim().length === 0) return;
-  console.log(kititems);
+  // console.log(kititems);
   const { data: session } = await cookieBasedClient.models.Session.create(    
   {
-    kititems,
+    // kititems,
     content
   });
 
   console.log("got session", session);
+  const addSessionToKitItem = await cookieBasedClient.models.SessionKitItems.create({
+    kitItem: kititem,
+    session: session,
+  });
+
   revalidatePath(`/kititem/${paramsId}`);
 }
 

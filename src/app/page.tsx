@@ -12,7 +12,7 @@ export default async function Home() {
   
   return (
     <main className="flex flex-col items-center justify-between p-24 w-1/2 m-auto">
-      <h1 className="text-2xl pb-10">List Of All Titles</h1>
+      <h1 className="text-2xl pb-10">List Of All KitItems</h1>
       {kititems?.map(async (kititem, idx) => (
         <KitItem
           onDelete={onDeleteKitItem}
