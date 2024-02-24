@@ -9,7 +9,7 @@ export default async function Home() {
   });
 
   console.log("kititems", kititems);
-  
+
   return (
     <main className="flex flex-col items-center justify-between p-24 w-1/2 m-auto">
       <h1 className="text-2xl pb-10">List Of All KitItems</h1>
